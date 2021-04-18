@@ -11,15 +11,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.com.sosnowski.develoment.backendCarWarehouses.entities.Car;
 import pl.com.sosnowski.develoment.backendCarWarehouses.repositories.CarRepository;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -92,10 +96,28 @@ public class WarehouseController {
 
     @GetMapping("/cars_sorted")
     public ResponseEntity<Map<String, Object>> getAllCarsSortedPaged(
-            @RequestParam(defaultValue = 0) int page,
-            @RequestParam(defaultValue = 6) int size
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
     ) {
-        Pageable paging = PageRequest.of(page, size, Sort.by("date_added").ascending());
+        try {
+            Pageable paging = PageRequest.of(page, size, Sort.by("date_added").ascending());
+            Page<Car> pageCars = carRepository.findAll(paging);
 
+            List<Car> cars = pageCars.getContent();
+            if(cars.isEmpty()) {
+                log.log(Level.WARNING, "Got empty car list!");
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            Map<String, Object> response = new HashMap<>();
+            response.put("cars", cars);
+            response.put("currentPage", pageCars.getNumber());
+            response.put("totalItems", pageCars.getTotalElements());
+            response.put("totalPages", pageCars.getTotalPages());
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
