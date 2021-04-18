@@ -10,12 +10,14 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import pl.com.sosnowski.develoment.backendCarWarehouses.repositories.CarRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +27,9 @@ import java.util.logging.Level;
 @Log
 @Controller
 public class WarehouseController {
+
+    @Autowired
+    CarRepository carRepository;
 
     @GetMapping("/hello")
     @ResponseBody
