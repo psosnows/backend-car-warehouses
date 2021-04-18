@@ -15,17 +15,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import pl.com.sosnowski.develoment.backendCarWarehouses.entities.Car;
+import pl.com.sosnowski.develoment.backendCarWarehouses.entities.Warehouse;
 import pl.com.sosnowski.develoment.backendCarWarehouses.repositories.CarRepository;
+import pl.com.sosnowski.develoment.backendCarWarehouses.repositories.WarehouseRepository;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 @Log
@@ -34,6 +34,9 @@ public class WarehouseController {
 
     @Autowired
     CarRepository carRepository;
+
+    @Autowired
+    WarehouseRepository warehouseRepository;
 
     @GetMapping("/hello")
     @ResponseBody
@@ -115,6 +118,19 @@ public class WarehouseController {
             response.put("totalPages", pageCars.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/warehouse")
+    public ResponseEntity<Object> getWarehouse(
+            @RequestParam() String id
+    ) {
+        try {
+            Optional<Warehouse> warehouse = warehouseRepository.findById(id);
+
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
