@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.standard.expression.GreaterThanExpression;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 @Log
@@ -68,11 +69,20 @@ public class WarehouseController {
                     log.log(Level.SEVERE, "Duplicate record found: place, not inserting.");
                     e.printStackTrace();
                 }
+
+                // dealing with all the cars in particular warehouse
+                for (Document car : (List<Document>) cars.get("vehicles")) {
+                    // adding reference id to identify where the car is located
+                    car.append("warehouse_id", place.get("_id"));
+                    try {
+                        carsCollection.insertOne(car);
+                    } catch (MongoWriteException e) {
+                        log.log(Level.SEVERE, "Duplicate record found: car, not inserting.");
+                        e.printStackTrace();
+                    }
+                }
             }
-
-
         }
-
         return "Success";
     }
 }
