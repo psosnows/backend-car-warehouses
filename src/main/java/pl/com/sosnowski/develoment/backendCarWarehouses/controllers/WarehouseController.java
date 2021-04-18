@@ -131,7 +131,7 @@ public class WarehouseController {
         try {
             Optional<Warehouse> warehouse = warehouseRepository.findById(id);
             if(warehouse.isEmpty()) {
-                log.log(Level.WARNING, "Did not find warehouse with id"+id);
+                log.log(Level.WARNING, "Did not find warehouse with id: "+id);
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
             return new ResponseEntity<>(warehouse, HttpStatus.OK);
