@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.thymeleaf.standard.expression.GreaterThanExpression;
 
 import java.util.Arrays;
 import java.util.List;
@@ -66,8 +65,7 @@ public class WarehouseController {
                 try {
                     placesCollection.insertOne(place);
                 } catch (MongoWriteException e) {
-                    log.log(Level.SEVERE, "Duplicate record found: place, not inserting.");
-                    e.printStackTrace();
+                    log.log(Level.WARNING, "Duplicate record found: place, not inserting.");
                 }
 
                 // dealing with all the cars in particular warehouse
@@ -77,8 +75,7 @@ public class WarehouseController {
                     try {
                         carsCollection.insertOne(car);
                     } catch (MongoWriteException e) {
-                        log.log(Level.SEVERE, "Duplicate record found: car, not inserting.");
-                        e.printStackTrace();
+                        log.log(Level.WARNING, "Duplicate record found: car, not inserting.");
                     }
                 }
             }
