@@ -48,7 +48,7 @@ public class WarehouseController {
     @GetMapping("/insert_db")
     @ResponseBody
     @SuppressWarnings("unchecked")
-    public String GetWarehouseData(@RequestBody String body) {
+    public String GetWarehouseDataInsertedToDB(@RequestBody String body) {
         JSONParser jsonParser = new JSONParser();
         JSONArray jsonArray = new JSONArray();
 
