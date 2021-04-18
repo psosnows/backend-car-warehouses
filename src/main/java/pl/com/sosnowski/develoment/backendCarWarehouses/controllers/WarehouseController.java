@@ -10,14 +10,16 @@ import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 @Log
@@ -81,5 +83,14 @@ public class WarehouseController {
             }
         }
         return "Success";
+    }
+
+    @GetMapping("/cars_sorted")
+    public ResponseEntity<Map<String, Object>> getAllCarsSortedPaged(
+            @RequestParam(defaultValue = 0) int page,
+            @RequestParam(defaultValue = 6) int size
+    ) {
+        Pageable paging = PageRequest.of(page, size, Sort.by("date_added").ascending());
+
     }
 }
